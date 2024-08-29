@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Etiket.MAUI.MainPage">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Entry x:Name="EntryField"
+               Placeholder="Top Numarası Giriniz"
+               Margin="20,10,20,10" 
+               IsEnabled="True"
+               Completed="OnEtiketYazdirClicked"
+               Grid.Row="0"
+               HorizontalOptions="FillAndExpand"
+               VerticalOptions="CenterAndExpand" />
+
+        <StackLayout Orientation="Horizontal"
+                     Grid.Row="3"
+                     HorizontalOptions="Center"
+                     VerticalOptions="End"
+                     Spacing="200">
+            <Button Text="Diger Sayfa Ac"
+                    Clicked="OnOpenPageClicked"
+                    Margin="5, 0" />
+            <Button Text="Etiket Yazdır"
+                    Clicked="OnEtiketYazdirClicked"
+                    Margin="5, 0" />
+
+            <Button Text="Çıkış"
+                    Clicked="OnCikisClicked"
+                    Margin="5, 0" />
+
+        </StackLayout>
+    </Grid>
+
+</ContentPage>

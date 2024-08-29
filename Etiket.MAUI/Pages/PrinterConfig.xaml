@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Etiket.MAUI.Pages.PrinterConfig"
+             Title="PrinterConfig">
+    <StackLayout Padding="20">
+
+        <Label Text="Printer IP Address:" FontSize="Medium" />
+        <Entry x:Name="PrinterIpEntry"
+               Placeholder="Enter IP Address"
+               Margin="0,10,0,20" />
+
+            <!-- Yazıcı Listesi (ComboBox olarak Picker kullanıyoruz) --><!--
+        <Label Text="Select Printer:" FontSize="Medium" />
+        <Picker x:Name="PrinterPicker"
+                Title="Available Printers"
+                ItemsSource="{Binding Printers}"
+                ItemDisplayBinding="{Binding PrinterName}"
+                Margin="0,10,0,20" />-->
+        
+        <!--<Button Text="Connect to Printer"
+                Clicked="OnConnectPrinterClicked"
+                BackgroundColor="LightBlue"
+                HorizontalOptions="Center" />-->
+        <Button Text="Yazdır"
+                Clicked="OnPrintClicked"
+                BackgroundColor="LightBlue"
+                HorizontalOptions="Center"></Button>
+    </StackLayout>
+</ContentPage>
