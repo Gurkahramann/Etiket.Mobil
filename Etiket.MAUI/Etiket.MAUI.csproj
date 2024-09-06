@@ -38,12 +38,53 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-android|AnyCPU'">
+	  <ApplicationTitle>Etiket Döküm</ApplicationTitle>
+	  <ApplicationId>com.kirayteks.etiket.maui</ApplicationId>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-ios|AnyCPU'">
+	  <ApplicationTitle>Etiket Döküm</ApplicationTitle>
+	  <ApplicationId>com.kirayteks.etiket.maui</ApplicationId>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-maccatalyst|AnyCPU'">
+	  <ApplicationTitle>Etiket Döküm</ApplicationTitle>
+	  <ApplicationId>com.kirayteks.etiket.maui</ApplicationId>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationTitle>Etiket Döküm</ApplicationTitle>
+	  <ApplicationId>com.kirayteks.etiket.maui</ApplicationId>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-android|AnyCPU'">
+	  <ApplicationTitle>Etiket Döküm</ApplicationTitle>
+	  <ApplicationId>com.kirayteks.etiket.maui</ApplicationId>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-ios|AnyCPU'">
+	  <ApplicationTitle>Etiket Döküm</ApplicationTitle>
+	  <ApplicationId>com.kirayteks.etiket.maui</ApplicationId>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-maccatalyst|AnyCPU'">
+	  <ApplicationTitle>Etiket Döküm</ApplicationTitle>
+	  <ApplicationId>com.kirayteks.etiket.maui</ApplicationId>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net8.0-windows10.0.19041.0|AnyCPU'">
+	  <ApplicationTitle>Etiket Döküm</ApplicationTitle>
+	  <ApplicationId>com.kirayteks.etiket.maui</ApplicationId>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiSplashScreen Include="Resources\Splash\image.svg" Color="#FFFFFF" BaseSize="128,128" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\image.svg" Color="#FFFFFF" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -57,12 +98,30 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <AndroidResource Remove="Platforms\Android\Resources\Images\keyboard.png" />
+	  <AndroidResource Remove="Platforms\Android\Resources\Images\printerConfig.png" />
+	  <AndroidResource Remove="Platforms\Android\Resources\Images\settings.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="Platforms\Android\Resources\Images\keyboard.png" />
+	  <None Remove="Platforms\Android\Resources\Images\printerConfig.png" />
+	  <None Remove="Platforms\Android\Resources\Images\settings.png" />
 	  <None Remove="Platforms\Android\Resources\xml\network_security_config.xml" />
+	  <None Remove="Resources\Splash\image.svg" />
+	  <None Remove="Resources\Splash\kirayteks.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiImage Include="Platforms\Android\Resources\Images\keyboard.png" />
+	  <MauiImage Include="Platforms\Android\Resources\Images\printerconfig.png" />
+	  <MauiImage Include="Platforms\Android\Resources\Images\settings.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="DevExpress.Drawing.Skia" Version="24.1.3" />
 		<PackageReference Include="DevExpress.Reporting.Core" Version="24.1.3" />
+		<PackageReference Include="DotNetEnv" Version="3.1.1" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.80" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.80" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
@@ -97,12 +156,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\PrinterConfig.xaml.cs">
-	    <DependentUpon>PrinterConfig.xaml</DependentUpon>
-	  </Compile>
+	  <Folder Include="Reports\" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiSplashScreen Include="Resources\Splash\image.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Pages\MainPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\PrinterConfig.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

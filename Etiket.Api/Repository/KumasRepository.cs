@@ -37,5 +37,14 @@ namespace Etiket.Api.Repository
                 return await connection.QueryAsync<KumasTop>(sql, new { TopNo = topNo });
             }
         }
+        public async Task<bool> KumasTopExists(string topNo)
+        {
+            using(var connection=new SqlConnection(_connectionString))
+            {
+                string sql = @"SELECT COUNT(1) From KumasTop Where TopNo=@TopNo";
+                var count = await connection.ExecuteScalarAsync<int>(sql, new { TopNo = topNo });
+                    return count > 0;
+            }    
+        }
     }
 }

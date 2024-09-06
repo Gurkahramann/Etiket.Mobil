@@ -26,27 +26,18 @@ namespace Etiket.DtoClient
             var url = $"/api/KumasTop/{topNo}";
             return await httpClient.GetFromJsonAsync<List<KumasTopDto>>(url);
         }
-        //public async Task<IEnumerable<KumasTopDto>> GetKumasTopByTopNoAsync(string topNo)
-        //{
-        //    // API endpoint'ine istek atılır
-        //    var response = await httpClient.GetAsync($"/api/KumasTop/{topNo}");
-
-        //    // Eğer API isteği başarısız olursa null döndür
-        //    if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
-        //    {
-        //        return null;
-        //    }
-
-        //    response.EnsureSuccessStatusCode();
-
-        //    // JSON formatındaki veri string olarak alınır
-        //    var jsonResponse = await response.Content.ReadAsStringAsync();
-
-        //    // JSON verisi KumasTopDto listesine dönüştürülür
-        //    var kumasTopList = JsonConvert.DeserializeObject<IEnumerable<KumasTopDto>>(jsonResponse);
-
-        //    return kumasTopList;
-        //}
+        public async Task<bool> KumasTopCheck(string topNo)
+        {
+            var url = $"/api/KumasTop/exists/{topNo}";
+            var response = await httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadAsStringAsync();
+                return bool.Parse(result);
+            }
+            else return false;
+        }
+      
 
     }
 

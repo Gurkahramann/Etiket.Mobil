@@ -1,107 +1,60 @@
 using Etiket.DtoClient;
 using Etiket.DtoClient.Models;
-using Etiket.MAUI.Reports;
 using System.Collections.ObjectModel;
-#if ANDROID || IOS || WINDOWS
-using Zebra.Sdk.Comm;
-using Zebra.Sdk.Printer;
-#endif
+using System.Text;
+
 namespace Etiket.MAUI.Pages;
 
 public partial class PrinterConfig : ContentPage
 {
-	private readonly ApiClientService _apiClientService;
-	public PrinterConfig(ApiClientService apiClientService)
-	{
+    private readonly ApiClientService _apiClientService;
+    public event Action<string> OnIpAddressSaved;
+
+    public PrinterConfig(ApiClientService apiClientService)
+    {
         _apiClientService = apiClientService;
         InitializeComponent();
-        
-	}
-    public async Task LoadReportData(string topNo,string printerIp)
-    {
-        try
-        {
-            var kumasTopList = await _apiClientService.GetKumasTop(topNo);
-
-            // Eðer veri boþsa bir hata mesajý gösterebilirsiniz
-            if (kumasTopList == null || !kumasTopList.Any())
-            {
-                await DisplayAlert("No Data", "No data found for the provided TopNo.", "OK");
-                return;
-            }
-
-            GenerateAndPrintReport(kumasTopList,printerIp);
-        }
-        catch(HttpRequestException ex)
-        {
-        
-            await DisplayAlert("Error", ex.Message, "OK");
-        }
-        
+        var printerIp = Preferences.Get("PrinterIp", string.Empty);
+        PrinterIpEntry.Text = printerIp;
+        PrinterIpEntry.Focus();
     }
-    private async void OnPrintClicked(object sender, EventArgs e)
+
+    private async void OnSaveClicked(object sender, EventArgs e)
     {
-        string printerIp = PrinterIpEntry.Text;
-        if(string.IsNullOrEmpty(printerIp))
+        var ipAddress = PrinterIpEntry.Text;
+        if (string.IsNullOrEmpty(ipAddress))
         {
-            await DisplayAlert("Error", "Please enter printer IP address.", "OK");
+            await DisplayAlert("Error", "Ip Adresi boþ býrakýlamaz!", "OK");
             return;
         }
-        await LoadReportData("S60200001",printerIp);
+        var ipPattern = @"^(\d{1,3}\.){3}\d{1,3}$";
+        if (!System.Text.RegularExpressions.Regex.IsMatch(ipAddress, ipPattern))
+        {
+            await DisplayAlert("Error", "Geçersiz IP Adresi formatý!", "OK");
+            return;
+        }
+
+        // IP adresindeki her sayýnýn 0-255 arasýnda olup olmadýðýný kontrol et
+        var parts = ipAddress.Split('.');
+        foreach (var part in parts)
+        {
+            if (!int.TryParse(part, out int num) || num < 0 || num > 255)
+            {
+                await DisplayAlert("Error", "Geçersiz IP Adresi!", "OK");
+                return;
+            }
+        }
+
+        OnIpAddressSaved?.Invoke(ipAddress);
+        Preferences.Set("PrinterIp", ipAddress); // IP adresini kaydet
+        await Shell.Current.GoToAsync("///MainPage");
     }
-#if ANDROID || IOS || WINDOWS
-    public void GenerateAndPrintReport(IEnumerable<KumasTopDto> kumasTopList, string printerIp)
+    private void OnEntryFocused(object sender, FocusEventArgs e)
     {
-        var report = new KumasReport(); // XtraReport sýnýfýnýz
-
-        // Veriyi raporun DataSource'una baðlayýn
-        report.DataSource = kumasTopList;
-
-        using (var stream = new MemoryStream())
-        {
-            // Raporu PDF olarak export et
-            report.ExportToPdf(stream);
-
-            // Stream'i baþa sar
-            stream.Seek(0, SeekOrigin.Begin);
-
-            // Zebra yazýcýsýna baðlan
-            var filePath = Path.Combine(FileSystem.AppDataDirectory, "KumasReport.pdf");
-            var connection = new TcpConnection(printerIp, 9100);
-            using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write))
-            {
-                stream.CopyTo(fileStream);
-            }
-
-            try
-            {
-                connection.Open();
-                // Yazýcýya PDF verisini gönder
-                connection.Write(stream.ToArray());
-            }
-            catch (ConnectionException ex)
-            {
-                DisplayAlert("Connection Error", ex.Message, "OK").Wait();
-            }
-            finally
-            {
-                Launcher.Default.OpenAsync(new OpenFileRequest
-                {
-                    File = new ReadOnlyFile(filePath)
-                });
-                connection.Close();
-            }
-        }
+        PrinterIpEntry.Focus();
     }
-#else
-        // MacCatalyst gibi desteklenmeyen platformlarda kullanmak isterseniz, alternatif bir iþlem ekleyebilirsiniz.
-        public void GenerateAndPrintReport(IEnumerable<KumasTopDto> kumasTopList, string printerIp)
-        {
-            // Alternatif iþlem
-            DisplayAlert("Error", "Printing is not supported on this platform.", "OK");
-        }
-#endif
-
-
-
+    private async void OnBackToMainPageClicked(object sender, EventArgs e)
+    {
+        await Shell.Current.GoToAsync("///MainPage");
+    }
 }

@@ -1,41 +1,83 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Etiket.MAUI.MainPage">
+             x:Class="Etiket.MAUI.Pages.MainPage">
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            IconImageSource="settings.png"
+            Text="Yazıcı Ayarları"
+            Order="Primary"
+            Priority="0"
+            Clicked="OnOpenPageClicked"/>
+    </ContentPage.ToolbarItems>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+        <!-- Loading Overlay -->
+        <Grid>
+            <!-- Main Content -->
+            <AbsoluteLayout>
+                <Grid Padding="10" RowSpacing="10" 
+                  AbsoluteLayout.LayoutBounds="0,0,1,1" 
+                  AbsoluteLayout.LayoutFlags="All">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-        <Entry x:Name="EntryField"
-               Placeholder="Top Numarası Giriniz"
-               Margin="20,10,20,10" 
-               IsEnabled="True"
-               Completed="OnEtiketYazdirClicked"
-               Grid.Row="0"
-               HorizontalOptions="FillAndExpand"
-               VerticalOptions="CenterAndExpand" />
+                    <!-- Entry ve Yazıcı Ayarları Butonu İçin Grid -->
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
 
-        <StackLayout Orientation="Horizontal"
-                     Grid.Row="3"
-                     HorizontalOptions="Center"
-                     VerticalOptions="End"
-                     Spacing="200">
-            <Button Text="Diger Sayfa Ac"
-                    Clicked="OnOpenPageClicked"
-                    Margin="5, 0" />
-            <Button Text="Etiket Yazdır"
-                    Clicked="OnEtiketYazdirClicked"
-                    Margin="5, 0" />
+                        <Entry x:Name="EntryField"
+                           Placeholder="Top Numarası Giriniz"
+                           IsEnabled="True"
+                           Completed="OnEtiketYazdirClicked"
+                           HorizontalOptions="FillAndExpand"
+                           VerticalOptions="CenterAndExpand" 
+                           Grid.Column="0"/>
+                        <ImageButton Source="Android/Resources/Images/keyboard.png"
+                         Clicked="OnOpenKeyboardClicked"
+                         HorizontalOptions="End"
+                         BackgroundColor="Transparent"
+                         WidthRequest="50"
+                         HeightRequest="50"
+                         Grid.Column="1"/>
+                    </Grid>
 
-            <Button Text="Çıkış"
-                    Clicked="OnCikisClicked"
-                    Margin="5, 0" />
+                    <!-- Etiket Yazdır Butonu İçin Grid -->
+                    <Grid Grid.Row="1" Margin="20,0,20,0">
+                        <Button Text="Etiket Yazdır"
+                            BackgroundColor="Green"
+                            Clicked="OnEtiketYazdirClicked"
+                            HorizontalOptions="FillAndExpand" />
+                    </Grid>
 
-        </StackLayout>
+                    <!-- Çıkış Butonu İçin Grid -->
+                    <Grid Grid.Row="2" Margin="20,0,20,0">
+                        <Button Text="Çıkış"
+                            BackgroundColor="Red"
+                            Clicked="OnCikisClicked"
+                            HorizontalOptions="FillAndExpand" />
+                    </Grid>
+                </Grid>
+            </AbsoluteLayout>
+            <Grid x:Name="loadingOverlay" BackgroundColor="Black" Opacity="0.8" IsVisible="False" 
+            AbsoluteLayout.LayoutBounds="0, 0, 1, 1" 
+            AbsoluteLayout.LayoutFlags="All">
+                <!-- Ensure the loading overlay is on top -->
+                <BoxView Color="Transparent" 
+             AbsoluteLayout.LayoutBounds="0, 0, 1, 1" 
+             AbsoluteLayout.LayoutFlags="All" />
+                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                    <ActivityIndicator IsRunning="True" Color="White" />
+                    <Label Text="Yazıcıya bağlanılıyor..." TextColor="White" HorizontalOptions="Center" />
+                </StackLayout>
+            </Grid>
+
+        </Grid>
     </Grid>
-
 </ContentPage>
